@@ -4,7 +4,7 @@ import logo from '../../assets/logo.svg'
 
 const Footer = () => {
     return (
-        <footer className="footer p-10 bg-base-200 text-base-content">
+        <footer className="footer p-10 bg-black text-white ">
   <div>
     <img src={logo} alt="" />
     <p>Car Doctor Industries Ltd.<br/>Providing reliable car service since 1992</p>
