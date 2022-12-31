@@ -31,7 +31,14 @@ const Header = () => {
         {
           user?.uid ? <Link onClick={()=>handleLogOut} to='/'>Logout</Link> : <Link to='/login'>Login</Link>
         }
-      </li>
+              </li>
+              <li className="font-semibold">
+               
+                {
+                  user?.uid && <Link to='/orders'>Orders</Link>
+                }
+              
+              </li>
       </ul>
     </div>
                 <Link to='/' className="btn btn-ghost normal-case text-xl">
@@ -45,7 +52,14 @@ const Header = () => {
         {
           user?.uid ? <Link onClick={handleLogOut} to='/'>Logout</Link> : <Link to='/login'>Login</Link>
         }
-      </li>
+            </li>
+            <li className="font-semibold">
+               
+                {
+                  user?.uid && <Link to='/orders'>Orders</Link>
+                }
+              
+              </li>
     </ul>
   </div>
   <div className="navbar-end">

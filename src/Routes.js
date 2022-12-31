@@ -1,4 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
+import PrivateRoute from "./Authentication/PrivateRoute";
 import Main from "./Layout/Main";
 import Checkout from "./Pages/Checkout/Checkout";
 import Home from "./Pages/Home/Home";
@@ -30,7 +31,7 @@ export const router = createBrowserRouter([
             },
             {
                 path: '/orders',
-                element: <Orders></Orders>
+                element: <PrivateRoute><Orders></Orders></PrivateRoute>
             }
         ]
     }
