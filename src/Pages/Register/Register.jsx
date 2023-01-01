@@ -1,11 +1,15 @@
 import React, { useContext } from "react";
 import login from "../../assets/images/login/login.svg";
-import { Link } from "react-router-dom";
+import { Link,useLocation, useNavigate  } from "react-router-dom";
 import { AuthContext } from "../../Authentication/Context/AuthProvider";
+import { AuthToken } from "../../Authentication/JWT/AuthToken";
 
 const Register = () => {
 
-    const {emailSignUp,updateName} = useContext(AuthContext)
+  const { emailSignUp, updateName } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location?.state?.from?.pathname || "/";
 
   const handleSignUp = (e) => {
       e.preventDefault();
@@ -14,15 +18,18 @@ const Register = () => {
         const email = form.email.value;
       const password = form.password.value;
       emailSignUp(email, password)
-          .then(user => {
-              console.log(user);
+          .then(userCredentials => {
+            const user = userCredentials.user;
               updateName(name)
                   .then(() => {
                   console.log('updated name');
                   })
                   .catch(err => {
                   console.log(err)
-              })
+                  })
+            AuthToken(user)
+            navigate(from, { replace: true });
+
       })
       
     
