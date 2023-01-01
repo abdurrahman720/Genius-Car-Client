@@ -1,23 +1,31 @@
-import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import login from '../../assets/images/login/login.svg'
 import { AuthContext } from "../../Authentication/Context/AuthProvider";
 
 const Login = () => {
-
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location?.state?.from?.pathname || '/'
+  const [error, setError] = useState('');
     const {emailSignIn} = useContext(AuthContext);
 
     const handleLogin = (e) => {
-        e.preventDefault();
+      e.preventDefault();
+      setError('')
         const form = e.target;
         const email = form.email.value;
         const password = form.password.value;
         emailSignIn(email, password)
-            .then(user => {
-            console.log(user)
+          .then(user => {
+              
+              console.log(user);
+              navigate(from, { replace: true })
+              
             })
             .catch(err => {
-            console.log(err);
+              console.log(err);
+              setError(err.message);
             })
         
     }
@@ -59,6 +67,9 @@ const Login = () => {
                 </a>
               </label>
             </div>
+            {
+              error && <p className="text-warning">{error}</p>
+            }
                       <div className="form-control mt-6">
                           <input className="btn btn-primary" type="submit" value="Login" />
               
