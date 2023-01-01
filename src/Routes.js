@@ -8,31 +8,43 @@ import Orders from "./Pages/Orders/Orders";
 import Register from "./Pages/Register/Register";
 
 export const router = createBrowserRouter([
-    {
-        path: '/',
-        element: <Main></Main>,
-        children: [
-            {
-                path: '/',
-                element: <Home></Home>
-            },
-            {
-                path: '/login',
-                element: <Login></Login>
-            },
-            {
-                path: '/register',
-                element: <Register></Register>
-            },
-            {
-                path: '/checkout/:id',
-                element:<PrivateRoute> <Checkout></Checkout></PrivateRoute>,
-                loader:({params})=>fetch(`http://localhost:5001/services/${params.id}`)
-            },
-            {
-                path: '/orders',
-                element: <PrivateRoute><Orders></Orders></PrivateRoute>
-            }
-        ]
-    }
-])
+  {
+    path: "/",
+    element: <Main></Main>,
+    children: [
+      {
+        path: "/",
+        element: <Home></Home>,
+      },
+      {
+        path: "/login",
+        element: <Login></Login>,
+      },
+      {
+        path: "/register",
+        element: <Register></Register>,
+      },
+      {
+        path: "/checkout/:id",
+        element: (
+          <PrivateRoute>
+            {" "}
+            <Checkout></Checkout>
+          </PrivateRoute>
+        ),
+        loader: ({ params }) =>
+          fetch(
+            `https://genius-car-server-liard-iota.vercel.app/services/${params.id}`
+          ),
+      },
+      {
+        path: "/orders",
+        element: (
+          <PrivateRoute>
+            <Orders></Orders>
+          </PrivateRoute>
+        ),
+      },
+    ],
+  },
+]);

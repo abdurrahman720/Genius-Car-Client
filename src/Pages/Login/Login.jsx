@@ -21,23 +21,24 @@ const Login = () => {
         const user = userCredentials.user;
         console.log(userCredentials);
         const currentUser = {
-          email: user?.email
-        }
+          email: user?.email,
+        };
         console.log(currentUser);
         //get jwt token
-        fetch('http://localhost:5001/jwt', {
-          method: 'POST',
+        fetch("https://genius-car-server-liard-iota.vercel.app/jwt", {
+          method: "POST",
           headers: {
-            'content-type' : 'application/json'
+            "content-type": "application/json",
           },
-          body: JSON.stringify(currentUser)
-        }).then(res => res.json()).then(data => {
-          //store token in local storage 
-          localStorage.setItem('genius-token', data.token)
-          console.log(data)
-          navigate(from, { replace: true });
+          body: JSON.stringify(currentUser),
         })
-        
+          .then((res) => res.json())
+          .then((data) => {
+            //store token in local storage
+            localStorage.setItem("genius-token", data.token);
+            console.log(data);
+            navigate(from, { replace: true });
+          });
       })
       .catch((err) => {
         console.log(err);

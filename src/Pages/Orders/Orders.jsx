@@ -7,11 +7,14 @@ const Orders = () => {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
-    fetch(`http://localhost:5001/orders?email=${user?.email}`, {
-      headers: {
-        authorization: `Bearer ${localStorage.getItem("genius-token")}`,
-      },
-    })
+    fetch(
+      `https://genius-car-server-liard-iota.vercel.app/orders?email=${user?.email}`,
+      {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("genius-token")}`,
+        },
+      }
+    )
       .then((response) => {
         if (response.status === 401 || response.status === 403) {
           localStorage.removeItem("genius-token");
@@ -28,7 +31,7 @@ const Orders = () => {
   const handleDelete = (id) => {
     const proceed = window.confirm("Are you sure to delete this order?");
     if (proceed) {
-      fetch(`http://localhost:5001/orders/${id}`, {
+      fetch(`https://genius-car-server-liard-iota.vercel.app/orders/${id}`, {
         method: "DELETE",
       })
         .then((response) => response.json())
@@ -43,7 +46,7 @@ const Orders = () => {
   };
 
   const handleStatusUpdate = (id) => {
-    fetch(`http://localhost:5001/orders/${id}`, {
+    fetch(`https://genius-car-server-liard-iota.vercel.app/orders/${id}`, {
       method: "PATCH",
       headers: {
         "content-type": "application/json",
