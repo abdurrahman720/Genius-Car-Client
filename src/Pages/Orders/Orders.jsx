@@ -3,58 +3,66 @@ import { AuthContext } from "../../Authentication/Context/AuthProvider";
 import OrderRow from "./OrderRow";
 
 const Orders = () => {
-  const { user } = useContext(AuthContext);
+  const { user, logOut } = useContext(AuthContext);
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
-    fetch(`http://localhost:5001/orders?email=${user?.email}`)
-      .then((response) => response.json())
-      .then((data) => setOrders(data));
-  }, [user?.email]);
+    fetch(`http://localhost:5001/orders?email=${user?.email}`, {
+      headers: {
+        authorization: `Bearer ${localStorage.getItem("genius-token")}`,
+      },
+    })
+      .then((response) => {
+        if (response.status === 401 || response.status === 403) {
+          localStorage.removeItem("genius-token");
+          return logOut();
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("recived", data);
+        setOrders(data);
+      });
+  }, [user?.email, logOut]);
 
   const handleDelete = (id) => {
-    const proceed = window.confirm('Are you sure to delete this order?');
+    const proceed = window.confirm("Are you sure to delete this order?");
     if (proceed) {
-        fetch(`http://localhost:5001/orders/${id}`, {
-            method: 'DELETE'
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.deletedCount >= 1) {
-                    alert('Ordered deleted successfully');
-                    const remaining = orders.filter(odr => odr._id !== id);
-                    setOrders(remaining);
-            }
-        })
+      fetch(`http://localhost:5001/orders/${id}`, {
+        method: "DELETE",
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.deletedCount >= 1) {
+            alert("Ordered deleted successfully");
+            const remaining = orders.filter((odr) => odr._id !== id);
+            setOrders(remaining);
+          }
+        });
     }
-  }
-    
-    const handleStatusUpdate = (id) => {
-        fetch(`http://localhost:5001/orders/${id}`, {
-            method: 'PATCH',
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify({status: "Approved"})
+  };
 
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.modifiedCount > 0) {
-                    const remaining = orders.filter(odr => odr._id !== id);
-                    const approved = orders.find(odr => odr._id === id);
-                    approved.status = 'approved';
-                    const newOrders = [approved, ...remaining];
-                    setOrders(newOrders);
-                    console.log(data)   
-                }
-               
-            })
-            
-        
-    }
-        
-    
+  const handleStatusUpdate = (id) => {
+    fetch(`http://localhost:5001/orders/${id}`, {
+      method: "PATCH",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({ status: "Approved" }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.modifiedCount > 0) {
+          const remaining = orders.filter((odr) => odr._id !== id);
+          const approved = orders.find((odr) => odr._id === id);
+          approved.status = "approved";
+          const newOrders = [approved, ...remaining];
+          setOrders(newOrders);
+          console.log(data);
+        }
+      });
+  };
+
   return (
     <div>
       <h2 className="text-3xl font-bold text-center">
@@ -78,10 +86,15 @@ const Orders = () => {
               <th></th>
             </tr>
           </thead>
-                  <tbody>
-                      {
-                          orders.map(order => <OrderRow key={order._id} order={order} handleDelete={handleDelete} handleStatusUpdate={handleStatusUpdate}></OrderRow>)
-                    }  
+          <tbody>
+            {orders.map((order) => (
+              <OrderRow
+                key={order._id}
+                order={order}
+                handleDelete={handleDelete}
+                handleStatusUpdate={handleStatusUpdate}
+              ></OrderRow>
+            ))}
           </tbody>
         </table>
       </div>
